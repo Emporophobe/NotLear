@@ -83,4 +83,4 @@ while True:
         api.update_status(tweet)
         print tweet
         print ''
-        time.sleep(300)
+        time.sleep(3600)
