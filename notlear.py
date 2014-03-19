@@ -57,15 +57,15 @@ def generate(words):
 
     return text
 
-#Post generated sentences as tweets every hour
+#Generate a sentence or two, all less than 140 characters
 
-while True:
+def maketweet():
     try:
         line1 = generate(100)
     except (IndexError, KeyError):
-        continue
+        maketweet()
     
-    while len(line1) < 15:
+    while len(line1) < 15 or line1.isupper():
         line1 = generate(100)
 
     tweet = line1
@@ -73,14 +73,18 @@ while True:
     if len(line1) < 140:
         line2 = generate(100)
         
-        while len(line2) < 15:
+        while len(line2) < 15 or line2.isupper():
             line2 = generate(100)
 
         if len(line1 + line2) < 140:
             tweet = line1 + ' ' + line2
         
     if  len(tweet) <= 140 and len(tweet) >= 15 and tweet.isupper() == False and tweet[-1] in ['.', '?', '!']:
-        api.update_status(tweet)
-        print tweet
-        print ''
-        time.sleep(3600)
+        return tweet
+    else:
+        return maketweet()
+        
+while True:
+    x = maketweet()
+    print x
+    time.sleep(1)
