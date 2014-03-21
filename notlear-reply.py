@@ -88,17 +88,19 @@ def maketweet(user):
 
     
 try:
-    lastmention = pickle.load(open('lastmention.p', r))
+    lastmention = pickle.load(open('lastmention.p', 'r'))
 except:
     lastmention = 0
+    print 'No previous mention'
 
 while True:
+    '''
     for follower in tweepy.Cursor(api.followers).items():
         try:
             follower.follow()
         except:
             pass
-    
+    '''
     mentions = api.mentions_timeline()
     mentionids = []
     
@@ -110,10 +112,10 @@ while True:
             tweet = maketweet(mention.user.screen_name)
             print tweet
             print 
-            #api.update_status(tweet)
+            api.update_status(tweet)
 
     lastmention = max(mentionids)
     
     pickle.dump(lastmention, open('lastmention.p', 'w'))
 
-    time.sleep(10)
+    time.sleep(60)
