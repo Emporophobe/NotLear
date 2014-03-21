@@ -85,21 +85,35 @@ def maketweet(user):
         return tweet
     else:
         return maketweet(user)
-        
 
-class CustomStreamListener(tweepy.StreamListener):
-    def on_status(self, status):
-            print status.text
-            print maketweet(status.user.screen_name)
-        
+    
+try:
+    lastmention = pickle.load(open('lastmention.p', r))
+except:
+    lastmention = 0
 
-    def on_error(self, status_code):
-        print >> sys.stderr, 'Encountered error with status code:', status_code
-        return True # Don't kill the stream
+while True:
+    for follower in tweepy.Cursor(api.followers).items():
+        try:
+            follower.follow()
+        except:
+            pass
+    
+    mentions = api.mentions_timeline()
+    mentionids = []
+    
+    for mention in mentions:
+        mentionids.append(mention.id)
 
-    def on_timeout(self):
-        print >> sys.stderr, 'Timeout...'
-        return True # Don't kill the stream
+    for mention in mentions:
+        if mention.id > lastmention:
+            tweet = maketweet(mention.user.screen_name)
+            print tweet
+            print 
+            #api.update_status(tweet)
 
-sapi = tweepy.streaming.Stream(auth, CustomStreamListener())
-sapi.filter(track=['@NYRangers'])
+    lastmention = max(mentionids)
+    
+    pickle.dump(lastmention, open('lastmention.p', 'w'))
+
+    time.sleep(10)
