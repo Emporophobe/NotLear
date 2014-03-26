@@ -110,9 +110,10 @@ while True:
     for mention in mentions:
         if mention.id > lastmention:
             tweet = maketweet(mention.user.screen_name)
+            print mention.text
             print tweet
             print 
-            api.update_status(tweet)
+            api.update_status(tweet, mention.id)
 
     lastmention = max(mentionids)
     
