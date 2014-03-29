@@ -87,4 +87,6 @@ def maketweet():
 while True:
     x = maketweet()
     print x
-    time.sleep(1)
+    print
+    api.update_status(x)
+    time.sleep(3600)
