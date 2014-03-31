@@ -32,11 +32,13 @@ def generate(words):
     
     while len(gentext) < int(words):
         gentext.append(seed[0])
-        new = database[seed][random.randint(0, len(database[seed])-1)]
-    
+        try:
+            new = database[seed][random.randint(0, len(database[seed])-1)]
+        except KeyError:
+            new = database[seed][random.randint(0, len(database[seed])-1)]
         seed = (seed[1], new)
 
-    while True:
+    while len(gentext) > 1:
         if gentext[1][0].isupper() and gentext[0][-1] in endpunct:
             gentext.pop(0)
             break
