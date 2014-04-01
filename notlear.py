@@ -91,4 +91,4 @@ while True:
     print x
     print
     api.update_status(x)
-    time.sleep(3600)
+    time.sleep(14400)
